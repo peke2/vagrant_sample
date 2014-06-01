@@ -10,7 +10,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "centos64-x86_64-20131030"
+  config.vm.box = "centos6_5"
 
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
@@ -24,15 +24,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
   # config.vm.network :private_network, ip: "192.168.33.10"
-  config.vm.network :forwarded_port, guest: 80, host: 53080
-
-  config.vm.network :forwarded_port,
-    guest: 22,
-    host: 53022,
-    id: "ssh",
-    auto_correct: true
-
-  config.vm.synced_folder "test", "/var/www"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -64,15 +55,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # View the documentation for the provider you're using for more
   # information on available options.
 
-  config.vm.provider "virtualbox" do |v|
-    v.name = "test-lamp-php5.4-no-apc-memcached"
-    v.memory = 2048
-  end
-
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
   # You will need to create the manifests directory and a manifest in
-  # the file centos64-x86_64-20131030.pp in the manifests_path directory.
+  # the file centos6_5.pp in the manifests_path directory.
   #
   # An example Puppet manifest to provision the message of the day:
   #
@@ -130,5 +116,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   #
   #   chef.validation_client_name = "ORGNAME-validator"
 
+  config.vm.network :forwarded_port,
+    guest: 22,
+    host: 21022,
+    id: "ssh",
+    auto_correct: true
+
+  config.vm.network :forwarded_port, guest: 80, host: 21080
+
+  config.vm.synced_folder "share", "/var/www/share"
+
+  config.vm.provider "virtualbox" do |v|
+    v.name = "DB test"
+    v.memory = 2048
+  end
+
   config.omnibus.chef_version = "11.10.0"
+
 end
